@@ -11,7 +11,7 @@ const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
 const msg = document.getElementById("msg"), dateEl = document.getElementById("date");
 let rows = [], header = [], bgImg = null;
 
-dateEl.value = localStorage.getItem("dateLine") || "";
+dateEl.value = localStorage.getItem("dateLine") || "من تاريخ 2/8/1448 إلى 24/1/1449 هـ الموافق 10/1/2027 إلى 29/6/2027 م";
 dateEl.addEventListener("input", () => { localStorage.setItem("dateLine", dateEl.value); draw(); });
 
 function parseCSV(t) {
@@ -131,11 +131,30 @@ function setData(table) {
 
 async function loadSheet() {
   const url = window.SHEET_CSV_URL || new URLSearchParams(location.search).get("csv");
+  if (url) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(res.status);
+      setData(parseCSV(await res.text()));
+      return;
+    } catch (e) {
+      try {
+        const fb = await fetch("courses.csv", { cache: "no-store" });
+        if (!fb.ok) throw new Error(fb.status);
+        setData(parseCSV(await fb.text()));
+        msg.textContent = "تنبيه: تعذّر تحميل رابط الشيت المنشور (" + e.message + ")، تم عرض البيانات المحلية (courses.csv).";
+        return;
+      } catch (e2) {
+        msg.textContent = "تعذّر تحميل الجدول: " + e.message;
+        return;
+      }
+    }
+  }
   try {
-    const res = await fetch(url || "courses.csv", { cache: "no-store" });
+    const res = await fetch("courses.csv", { cache: "no-store" });
     if (!res.ok) throw new Error(res.status);
     setData(parseCSV(await res.text()));
-    if (!url) msg.textContent = "تنبيه: لم يُضبط رابط الشيت في config.js، يتم استخدام courses.csv التجريبي.";
+    msg.textContent = "تنبيه: لم يُضبط رابط الشيت في config.js، يتم استخدام courses.csv التجريبي.";
   } catch (e) { msg.textContent = "تعذّر تحميل الجدول: " + e.message; }
 }
 
