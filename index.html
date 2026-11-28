@@ -14,12 +14,19 @@ body{font-family:Cairo,sans-serif;background:#f3f3ee;margin:0;padding:20px;color
 .bar input[type=text]{flex:1;min-width:280px;padding:10px;font:inherit;border:1px solid #aaa;border-radius:8px}
 button,label.btn{background:#57641e;color:#fff;border:0;padding:10px 18px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer}
 button.alt,label.btn{background:#a98421}
+.themes{display:inline-flex;border:2px solid #57641e;border-radius:8px;overflow:hidden}
+.themes button{background:#fff;color:#57641e;border-radius:0;padding:8px 14px}
+.themes button.active{background:#57641e;color:#fff}
 #msg{max-width:900px;margin:0 auto 10px;color:#a00}
 canvas{display:block;margin:0 auto;max-width:100%;height:auto;box-shadow:0 2px 12px #0003;background:#fff}
 </style>
 </head>
 <body>
 <div class="bar">
+  <div class="themes" role="group" aria-label="اختيار التصميم">
+    <button type="button" data-theme="1" class="active">التصميم الأول</button>
+    <button type="button" data-theme="2">التصميم الثاني</button>
+  </div>
   <input id="date" type="text" placeholder="اكتب سطر التاريخ، مثال: من تاريخ 29/4/1448 إلى 29/6/1448 هـ الموافق 10/10/2026 إلى 9/12/2026 م">
   <button id="refresh">تحديث من الشيت</button>
   <label class="btn">رفع CSV<input id="file" type="file" accept=".csv" hidden></label>
